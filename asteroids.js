@@ -1,6 +1,6 @@
-// CLASSES //
+// // CLASSES //
 class Player {
-    // a better way to organize the arguments, so I dont need to rely on the position os the parameters, I can access them through the labels.
+    //     // a better way to organize the arguments, so I dont need to rely on the position os the parameters, I can access them through the labels.
     constructor({ position, speed, lives, score }) {
         this.position = position;
         this.speed = speed;
@@ -9,7 +9,7 @@ class Player {
     }
 }
 
-// CACHED ELEMENTS //
+// // CACHED ELEMENTS //
 const player = new Player({
     position: { x: 0, y: 0 },
     speed: { x: 0, y: 0 },
@@ -17,19 +17,50 @@ const player = new Player({
     score: 0,
 });
 
-// MOVES THE PLAYER //
+let playerElement = document.querySelector('#player');
 
-document.addEventListener('keydown', function (event) {
+// --------- MOVES THE PLAYER --------------------------------
+
+document.addEventListener('keypress', function (event) {
     let keyPressed = event.key;
-    if (keyPressed === 'w') {
-        console.log(keyPressed);
-    } else if (keyPressed === 'a') {
-        console.log(keyPressed);
-    } else if (keyPressed === 's') {
-        console.log(keyPressed);
-    } else if (keyPressed === 'd') {
-        console.log(keyPressed);
-    }
+    const velocity = 10;
 
-    // console.log(event.key);
+    //  // --- UP --------------------------------------------
+    if (keyPressed === 'w') {
+        player.position.y -= velocity;
+        playerElement.style.top = player.position.y + 'px';
+        // console.log(keyPressed);
+
+        // ---------------------------------------------------
+        // --- LEFT ------------------------------------------
+    } else if (keyPressed === 'a') {
+        player.position.x -= velocity;
+        playerElement.style.left = player.position.x + 'px';
+        // console.log(keyPressed);
+
+        // ---------------------------------------------------
+        // --- DOWN ------------------------------------------
+    } else if (keyPressed === 's') {
+        player.position.y += velocity;
+        playerElement.style.top = player.position.y + 'px';
+        // console.log(keyPressed);
+
+        // ---------------------------------------------------
+        // --- RIGHT -----------------------------------------
+    } else if (keyPressed === 'd') {
+        player.position.x += velocity;
+        playerElement.style.left = player.position.x + 'px';
+        // console.log(keyPressed);
+    }
 });
+// ----------------------------------------------------------
+
+// FUNCTIONS //
+
+function initialize() {
+    playerElement.style.top = 400;
+}
+
+// INITIALIZE THE GAME
+
+initialize();

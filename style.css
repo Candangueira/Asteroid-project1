@@ -6,9 +6,9 @@
 }
 
 #player {
-    position: relative;
-    top: 400px;
-    left: 900px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
     background: whitesmoke;
     height: 30px;
     width: 30px;
