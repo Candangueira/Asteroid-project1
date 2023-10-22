@@ -1,66 +1,75 @@
 // // CLASSES //
 class Player {
-    //     // a better way to organize the arguments, so I dont need to rely on the position os the parameters, I can access them through the labels.
-    constructor({ position, velocity, speed, lives, score }) {
+    // a better way to organize the arguments, so I dont need to rely on the position os the parameters, I can access them through the labels.
+    constructor({ position, velocity, acceleration, lives, score, gunbarrel }) {
         this.position = position;
         this.velocity = velocity;
-        this.speed = speed;
+        this.acceleration = acceleration;
         this.lives = lives;
         this.score = score;
+        this.gunbarrel = gunbarrel;
     }
 }
-
+class Bullet {
+    constructor({ angle }) {
+        this.angle = angle;
+    }
+}
 // // CACHED ELEMENTS //
 let keys = [];
 const player = new Player({
     position: { x: 800, y: 400 },
-    velocity: { x: 0, y: 0 },
-    speed: 8,
+    velocity: { x: 4, y: 4 },
+    acceleration: 1.08,
     lives: 3,
     score: 0,
 });
-
+let bullet = new Bullet({
+    angle: player.position,
+});
+console.log(player);
 let playerElement = document.querySelector('#player');
 
 // --------- MOVES THE PLAYER --------------------------------
 // ! BUG ! ( If you press 2 keys at the same time it doesnt move on diagonal )
-document.addEventListener('keypress', function (event) {
-    let keyPressed = event.key;
-    const velocity = player.speed;
 
-    document.addEventListener('keydown', function (event) {
-        keys[event.KeyCode] = true;
-    });
-    document.addEventListener('keyup', function (event) {
-        keys[event.KeyCode] = false;
-    });
+document.addEventListener('keyup', function (event) {
+    // resets the acceleration and velocity to default
+    player.acceleration = 1.045;
+    player.velocity.x = 4;
+    player.velocity.y = 4;
+    // --------------------------------------------------------------------
+});
+
+document.addEventListener('keydown', function (event) {
+    let keyPressed = event.key;
 
     //  // --- UP --------------------------------------------
     if (keyPressed === 'w') {
-        player.position.y -= velocity;
+        player.position.y -= player.velocity.y;
         playerElement.style.top = player.position.y + 'px';
-        // console.log(keyPressed);
+        player.velocity.y *= player.acceleration; // acceleration
 
         // ---------------------------------------------------
         // --- LEFT ------------------------------------------
     } else if (keyPressed === 'a') {
-        player.position.x -= velocity;
+        player.position.x -= player.velocity.x;
         playerElement.style.left = player.position.x + 'px';
-        // console.log(keyPressed);
+        player.velocity.x *= player.acceleration; // acceleration
 
         // ---------------------------------------------------
         // --- DOWN ------------------------------------------
     } else if (keyPressed === 's') {
-        player.position.y += velocity;
+        player.position.y += player.velocity.y;
         playerElement.style.top = player.position.y + 'px';
-        // console.log(keyPressed);
+        player.velocity.y *= player.acceleration; // acceleration
 
         // ---------------------------------------------------
         // --- RIGHT -----------------------------------------
     } else if (keyPressed === 'd') {
-        player.position.x += velocity;
+        player.position.x += player.velocity.x;
         playerElement.style.left = player.position.x + 'px';
-        // console.log(keyPressed);
+        player.velocity.x *= player.acceleration; // acceleration
     }
 });
 // ----------------------------------------------------------
