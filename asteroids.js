@@ -1,8 +1,9 @@
 // // CLASSES //
 class Player {
     //     // a better way to organize the arguments, so I dont need to rely on the position os the parameters, I can access them through the labels.
-    constructor({ position, speed, lives, score }) {
+    constructor({ position, velocity, speed, lives, score }) {
         this.position = position;
+        this.velocity = velocity;
         this.speed = speed;
         this.lives = lives;
         this.score = score;
@@ -10,9 +11,11 @@ class Player {
 }
 
 // // CACHED ELEMENTS //
+let keys = [];
 const player = new Player({
-    position: { x: 0, y: 0 },
-    speed: { x: 0, y: 0 },
+    position: { x: 800, y: 400 },
+    velocity: { x: 0, y: 0 },
+    speed: 8,
     lives: 3,
     score: 0,
 });
@@ -23,7 +26,14 @@ let playerElement = document.querySelector('#player');
 // ! BUG ! ( If you press 2 keys at the same time it doesnt move on diagonal )
 document.addEventListener('keypress', function (event) {
     let keyPressed = event.key;
-    const velocity = 10;
+    const velocity = player.speed;
+
+    document.addEventListener('keydown', function (event) {
+        keys[event.KeyCode] = true;
+    });
+    document.addEventListener('keyup', function (event) {
+        keys[event.KeyCode] = false;
+    });
 
     //  // --- UP --------------------------------------------
     if (keyPressed === 'w') {
@@ -67,14 +77,13 @@ document.addEventListener('mousemove', function (event) {
     );
     let rotation = angle * (180 / Math.PI) * -1; // converts que value in degrees from 'angle' in radians and multiplies per -1 to invert the rotation orientation.
     playerElement.style.transform = 'rotate(' + rotation + 'deg)'; // applies the rotation in the element.
-
-    console.log(rotation);
 });
 
 // FUNCTIONS //
 
 function initialize() {
-    // playerElement.style.top = 400;
+    playerElement.style.top = `${player.position.y}px`;
+    playerElement.style.left = `${player.position.x}px`;
 }
 
 // INITIALIZE THE GAME
