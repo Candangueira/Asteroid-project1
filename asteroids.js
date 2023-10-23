@@ -27,8 +27,9 @@ let velY = 5.5;
 let rotation = 0;
 let acc = 1.04;
 
-let keysPressed = {}; // checks which keys are being pressed
+let keysPressed = {};
 const keys = {};
+const bullets = [];
 
 let playerElement = document.querySelector('#player');
 const screen = document.querySelector('.container');
@@ -155,22 +156,22 @@ document.addEventListener('click', function (event) {
     shoot();
     console.log('click');
 });
+
 // FUNCTIONS // ----------------------------------------------
 
 function initialize() {
     playerElement.style.top = `${player.position.y}px`;
     playerElement.style.left = `${player.position.x}px`;
-    render();
     console.log(player.position.x);
     console.log(screen.clientWidth);
 }
 
-function render() {
-    if (player.position.x >= screen.clientWidth) {
-        player.position.x = 1700;
-    }
+function update() {
+    // for (let i = 0; i < 1000; i++) {
+    //     this.position.x += this.velocity.x;
+    //     this.position.y += this.velocity.y;
+    // }
 }
-
 function shoot() {
     let bullet = new Bullet({
         visible: true,
@@ -184,13 +185,19 @@ function shoot() {
     bulletElement.classList.add('bullet'); // adds a class
     screen.appendChild(bulletElement); // render in the screen
 
-    bulletElement.style.left = player.position.x + 10 + 'px';
-    bulletElement.style.top = player.position.y + -15 + 'px';
-
     bulletElement.style.transform = 'rotate(' + rotation + 'deg)';
 
+    setInterval(function () {
+        bullet.position.x += bullet.speed;
+        bullet.position.y += bullet.speed;
+        bulletElement.style.left = bullet.position.x + 'px';
+        bulletElement.style.top = bullet.position.y + 'px';
+    }, 20);
+
+    bullet.position.y += bullet.speed + i;
     console.log(bullet.position.x);
 }
+
 // INITIALIZE THE GAME
 
 initialize();
