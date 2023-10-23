@@ -11,7 +11,8 @@ class Player {
     }
 }
 class Bullet {
-    constructor({ angle, position, collision, speed }) {
+    constructor({ visible, angle, position, collision, speed }) {
+        this.visible = visible;
         this.angle = angle;
         this.position = position;
         this.collision = collision;
@@ -26,7 +27,9 @@ let velY = 5.5;
 let rotation = 0;
 let acc = 1.04;
 
-let keysPressed = {};
+let keysPressed = {}; // checks which keys are being pressed
+const keys = {};
+
 let playerElement = document.querySelector('#player');
 const screen = document.querySelector('.container');
 
@@ -44,10 +47,9 @@ console.log(player);
 // ! BUG ! ( If you press 2 keys at the same time it doesnt move on diagonal )
 
 document.addEventListener('keyup', function (event) {
-    let keyReleased = event.key;
-    delete keysPressed[keyReleased];
-    // resets the acceleration and velocity to default
+    keysPressed[event.key] = false;
 
+    // resets the acceleration and velocity to default
     player.velocity.y *= -player.acceleration;
     player.acceleration = acc;
     player.velocity.x = velX;
@@ -55,43 +57,83 @@ document.addEventListener('keyup', function (event) {
     // --------------------------------------------------------------------
 });
 
-document.addEventListener('keydown', function (event) {
-    let keyPressed = event.key;
-    // ------------ LINES -------------------------------------------------
-    //  // --- UP --------------------------------------------
-    if (keyPressed === 'w') {
-        keysPressed[keyPressed] = true;
+// ------------ LINES -------------------------------------------------
+//  // --- UP --------------------------------------------
+onkeydown = onkeyup = function (e) {
+    e = e || event; // to deal with IE
+    keys[e.code] = e.type == 'keydown';
+
+    // --- UP ------------------------------------------
+    if (keys['KeyW']) {
         player.position.y -= player.velocity.y;
         playerElement.style.top = player.position.y + 'px';
-        player.velocity.y *= player.acceleration; // acceleration
+        // player.velocity.y *= player.acceleration; // acceleration
 
-        // ---------------------------------------------------
         // --- LEFT ------------------------------------------
-    } else if (keyPressed === 'a') {
-        keysPressed[keyPressed] = true;
+    }
+    if (keys['KeyA']) {
         player.position.x -= player.velocity.x;
         playerElement.style.left = player.position.x + 'px';
-        player.velocity.x *= player.acceleration; // acceleration
+        // player.velocity.x *= player.acceleration; // acceleration
 
-        // ---------------------------------------------------
         // --- DOWN ------------------------------------------
-    } else if (keyPressed === 's') {
-        keysPressed[keyPressed] = true;
+    }
+    if (keys['KeyS']) {
         player.position.y += player.velocity.y;
         playerElement.style.top = player.position.y + 'px';
-        player.velocity.y *= player.acceleration; // acceleration
+        // player.velocity.y *= player.acceleration; // acceleration
 
-        // ---------------------------------------------------
         // --- RIGHT -----------------------------------------
-    } else if (keyPressed === 'd') {
-        keysPressed[keyPressed] = true;
+    }
+    if (keys['KeyD']) {
         player.position.x += player.velocity.x;
         playerElement.style.left = player.position.x + 'px';
-        player.velocity.x *= player.acceleration; // acceleration
+        //player.velocity.x *= player.acceleration; // acceleration
+    }
+    // // --------------- DIAGONALS ---------------------------
+    // --- NORTHWEST ------------------------------------------
+    if (keys['KeyW'] && keys['KeyA']) {
+        player.position.y -= player.velocity.y;
+        playerElement.style.top = player.position.y + 'px';
+        //player.velocity.y *= player.acceleration; // acceleration
+
+        player.position.x -= player.velocity.x;
+        playerElement.style.left = player.position.x + 'px';
+        // player.velocity.x *= player.acceleration; // acceleration
     }
 
-    // --------------- DIAGONALS ---------------------------
-});
+    // --- NORTHEAST ------------------------------------------
+    if (keys['KeyW'] && keys['KeyD']) {
+        player.position.y -= player.velocity.y;
+        playerElement.style.top = player.position.y + 'px';
+        // player.velocity.y *= player.acceleration; // acceleration
+
+        player.position.x += player.velocity.x;
+        playerElement.style.left = player.position.x + 'px';
+        //player.velocity.x *= player.acceleration; // acceleration
+    }
+    // --- SOUTHEAST ------------------------------------------
+    if (keys['KeyD'] && keys['KeyS']) {
+        player.position.x += player.velocity.x;
+        playerElement.style.left = player.position.x + 'px';
+        //player.velocity.x *= player.acceleration; // acceleration
+
+        player.position.y += player.velocity.y;
+        playerElement.style.top = player.position.y + 'px';
+        // player.velocity.y *= player.acceleration; // acceleration
+    }
+    // --- SOUTHWEST ------------------------------------------
+    if (keys['KeyA'] && keys['KeyS']) {
+        player.position.x -= player.velocity.x;
+        playerElement.style.left = player.position.x + 'px';
+        // player.velocity.x *= player.acceleration; // acceleration
+
+        player.position.y += player.velocity.y;
+        playerElement.style.top = player.position.y + 'px';
+        // player.velocity.y *= player.acceleration; // acceleration
+    }
+};
+
 // ----------------------------------------------------------
 
 // ----- MOUSE FOLLOWING CURSOR -----------------------------
@@ -131,8 +173,10 @@ function render() {
 
 function shoot() {
     let bullet = new Bullet({
+        visible: true,
         angle: rotation,
         position: { x: player.position.x, y: player.position.y },
+        speed: 5,
         collision: false,
     });
 
@@ -140,9 +184,11 @@ function shoot() {
     bulletElement.classList.add('bullet'); // adds a class
     screen.appendChild(bulletElement); // render in the screen
 
-    bulletElement.style.top = bullet.position.y + 5 + 'px';
-    bulletElement.style.left = bullet.position.x + 10 + 'px';
-    // bulletElement.style.transform = 'rotate(' + rotation + 'deg)';
+    bulletElement.style.left = player.position.x + 10 + 'px';
+    bulletElement.style.top = player.position.y + -15 + 'px';
+
+    bulletElement.style.transform = 'rotate(' + rotation + 'deg)';
+
     console.log(bullet.position.x);
 }
 // INITIALIZE THE GAME
