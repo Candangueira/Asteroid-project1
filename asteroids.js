@@ -11,10 +11,11 @@ class Player {
     }
 }
 class Bullet {
-    constructor({ visible, angle, position, collision, speed }) {
+    constructor({ visible, angle, position, collision, speed, velocity }) {
         this.visible = visible;
         this.angle = angle;
         this.position = position;
+        this.velocity = velocity;
         this.collision = collision;
         this.speed = speed;
     }
@@ -24,7 +25,12 @@ let posX = 800;
 let posY = 400;
 let velX = 5.5;
 let velY = 5.5;
+let bulletVel = {};
+let mouseX = 0;
+let mouseY = 0;
+let angle = 0;
 let rotation = 0;
+let rotationBullet = 0;
 let acc = 1.04;
 
 let keysPressed = {};
@@ -63,6 +69,7 @@ document.addEventListener('keyup', function (event) {
 onkeydown = onkeyup = function (e) {
     e = e || event; // to deal with IE
     keys[e.code] = e.type == 'keydown';
+    checkPlayerLimits();
 
     // --- UP ------------------------------------------
     if (keys['KeyW']) {
@@ -140,10 +147,9 @@ onkeydown = onkeyup = function (e) {
 // ----- MOUSE FOLLOWING CURSOR -----------------------------
 document.addEventListener('mousemove', function (event) {
     // calculates the angle based on the position of the cursor nad the position of the element //
-
     // ! I couldnt understand 100% what is going on here ! //
     // ! BUG ! (when you move the player and leave the cursor still, the element doesnt rotate)
-    let angle = Math.atan2(
+    angle = Math.atan2(
         event.clientX - player.position.x, // gets the coordinate x of the cursor and substracts from the x coordinate of the element.
         event.clientY - player.position.y // gets the coordinate y of the cursor and substracts from the y coordinate of the element.
     );
@@ -153,49 +159,73 @@ document.addEventListener('mousemove', function (event) {
 
 // ----- SHOT -----------------------------------------------
 document.addEventListener('click', function (event) {
+    const angleBullet = Math.atan2(
+        event.clientY - player.position.y,
+        event.clientX - player.position.x
+    );
+    bulletVel = {
+        x: Math.cos(angleBullet),
+        y: Math.sin(angleBullet),
+    };
     shoot();
-    console.log('click');
 });
 
 // FUNCTIONS // ----------------------------------------------
 
+function checkPlayerLimits() {
+    if (player.position.x >= 1760) {
+        player.position.x = 1760;
+    }
+    if (player.position.x <= 0) {
+        player.position.x = 0;
+    }
+    if (player.position.y <= 0) {
+        player.position.y = 0;
+    }
+    if (player.position.y >= 770) {
+        player.position.y = 770;
+    }
+}
 function initialize() {
     playerElement.style.top = `${player.position.y}px`;
     playerElement.style.left = `${player.position.x}px`;
-    console.log(player.position.x);
-    console.log(screen.clientWidth);
 }
 
-function update() {
-    // for (let i = 0; i < 1000; i++) {
-    //     this.position.x += this.velocity.x;
-    //     this.position.y += this.velocity.y;
-    // }
-}
 function shoot() {
     let bullet = new Bullet({
         visible: true,
-        angle: rotation,
-        position: { x: player.position.x, y: player.position.y },
-        speed: 5,
+        angle: 0,
+        position: {
+            x: player.position.x,
+            y: player.position.y,
+        },
+        velocity: {
+            x: bulletVel.x,
+            y: bulletVel.y,
+        },
+        speed: 10,
         collision: false,
     });
+
+    bullets.push(bullet);
+    console.log(bullets);
 
     const bulletElement = document.createElement('div'); // creates the element
     bulletElement.classList.add('bullet'); // adds a class
     screen.appendChild(bulletElement); // render in the screen
-
     bulletElement.style.transform = 'rotate(' + rotation + 'deg)';
 
     setInterval(function () {
-        bullet.position.x += bullet.speed;
-        bullet.position.y += bullet.speed;
+        bullet.position.x += bullet.velocity.x * bullet.speed;
+        bullet.position.y += bullet.velocity.y * bullet.speed;
+        bulletElement.style.transform = 'rotateBullet(' + rotation + 'deg)';
         bulletElement.style.left = bullet.position.x + 'px';
         bulletElement.style.top = bullet.position.y + 'px';
     }, 20);
 
-    bullet.position.y += bullet.speed + i;
-    console.log(bullet.position.x);
+    if (!bullet.visible) {
+        bullet;
+    }
 }
 
 // INITIALIZE THE GAME
