@@ -200,7 +200,9 @@ function checkPlayerLimits() {
 function initialize() {
     playerElement.style.top = `${player.position.y}px`;
     playerElement.style.left = `${player.position.x}px`;
-    spawnAsteroids();
+    setInterval(() => {
+        spawnAsteroid();
+    }, 5000);
 }
 
 function shoot() {
@@ -235,7 +237,16 @@ function shoot() {
     }, 20);
 }
 
-function spawnAsteroids() {
+function randomAnglesAsteroids() {
+    const angleAsteroid = Math.atan2(3, 5);
+    asteroidVel = {
+        x: Math.cos(angleAsteroid),
+        y: Math.sin(angleAsteroid),
+    };
+    return;
+}
+function spawnAsteroid() {
+    // --- CREATES THE CLASS AND PUT ON THE ARRAY ---------------------------------------------
     randomAnglesAsteroids();
 
     visible = true;
@@ -262,22 +273,11 @@ function spawnAsteroids() {
             velocity: velocityAsteroid,
         })
     );
-    moveAsteroid();
-}
-
-function randomAnglesAsteroids() {
-    const angleAsteroid = Math.atan2(3, 5);
-    asteroidVel = {
-        x: Math.cos(angleAsteroid),
-        y: Math.sin(angleAsteroid),
-    };
-    return;
-}
-function moveAsteroid() {
     // --- CREATES AND RENDER IT ON THE SCREEN -------------------------------------------------
     const asteroidElement = document.createElement('div'); // creates the element asteroid
     asteroidElement.classList.add('asteroid'); // assign a class
     screen.appendChild(asteroidElement);
+
     // -----------------------------------------------------------------------------------------
     setInterval(() => {
         asteroids.forEach((rockAsteroid) => {
@@ -287,13 +287,10 @@ function moveAsteroid() {
             rockAsteroid.position.y += 2;
             asteroidElement.style.transform =
                 'rotate(' + rotationAsteroid++ + 'deg)';
-            'rotate(' + console.log(rockAsteroid.position.x);
-        }, 20);
+            console.log(rockAsteroid.position.x);
+        }, 2000);
     });
 }
 // INITIALIZE THE GAME
 
 initialize();
-
-// console.log(player.position.x);
-// console.log(screen.width);
