@@ -24,3 +24,12 @@
     height: 8px;
     width: 8px;
 }
+
+.asteroid {
+    position: absolute;
+        top: 0px;
+        left: 0px;
+        background: rgb(207, 199, 199);
+        height: 60px;
+        width: 60px;
+}

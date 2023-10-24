@@ -1,19 +1,28 @@
 // // CLASSES //
 class Player {
     // a better way to organize the arguments, so I dont need to rely on the position os the parameters, I can access them through the labels.
-    constructor({ position, velocity, acceleration, lives, score, gunbarrel }) {
+    constructor({ position, velocity, lives, score }) {
         this.position = position;
         this.velocity = velocity;
-        this.acceleration = acceleration;
         this.lives = lives;
         this.score = score;
-        this.gunbarrel = gunbarrel;
     }
 }
 class Bullet {
     constructor({ visible, angle, position, collision, speed, velocity }) {
         this.visible = visible;
-        this.angle = angle;
+
+        this.position = position;
+        this.velocity = velocity;
+        this.collision = collision;
+        this.speed = speed;
+    }
+}
+
+class Asteorids {
+    constructor({ visible, size, position, collision, speed, velocity }) {
+        this.visible = visible;
+        this.size = size;
         this.position = position;
         this.velocity = velocity;
         this.collision = collision;
@@ -32,10 +41,12 @@ let angle = 0;
 let rotation = 0;
 let rotationBullet = 0;
 let acc = 1.04;
+let asteroidsInterval = 2000;
 
 let keysPressed = {};
 const keys = {};
 const bullets = [];
+const asteroids = [];
 
 let playerElement = document.querySelector('#player');
 const screen = document.querySelector('.container');
@@ -147,13 +158,12 @@ onkeydown = onkeyup = function (e) {
 // ----- MOUSE FOLLOWING CURSOR -----------------------------
 document.addEventListener('mousemove', function (event) {
     // calculates the angle based on the position of the cursor nad the position of the element //
-    // ! I couldnt understand 100% what is going on here ! //
     // ! BUG ! (when you move the player and leave the cursor still, the element doesnt rotate)
     angle = Math.atan2(
         event.clientX - player.position.x, // gets the coordinate x of the cursor and substracts from the x coordinate of the element.
         event.clientY - player.position.y // gets the coordinate y of the cursor and substracts from the y coordinate of the element.
     );
-    rotation = angle * (180 / Math.PI) * -1; // converts que value in degrees from 'angle' in radians and multiplies per -1 to invert the rotation orientation.
+    rotation = angle * (180 / Math.PI) * -1; // converts que value in radians from 'angle' to degrees and multiplies per -1 to invert the rotation orientation.
     playerElement.style.transform = 'rotate(' + rotation + 'deg)'; // applies the rotation in the element.
 });
 
@@ -189,6 +199,7 @@ function checkPlayerLimits() {
 function initialize() {
     playerElement.style.top = `${player.position.y}px`;
     playerElement.style.left = `${player.position.x}px`;
+    spawnAsteroids();
 }
 
 function shoot() {
@@ -212,20 +223,52 @@ function shoot() {
 
     const bulletElement = document.createElement('div'); // creates the element
     bulletElement.classList.add('bullet'); // adds a class
-    screen.appendChild(bulletElement); // render in the screen
     bulletElement.style.transform = 'rotate(' + rotation + 'deg)';
 
     setInterval(function () {
+        screen.appendChild(bulletElement); // render in the screen
         bullet.position.x += bullet.velocity.x * bullet.speed;
         bullet.position.y += bullet.velocity.y * bullet.speed;
         bulletElement.style.transform = 'rotateBullet(' + rotation + 'deg)';
-        bulletElement.style.left = bullet.position.x + 'px';
-        bulletElement.style.top = bullet.position.y + 'px';
+        bulletElement.style.left = bullet.position.x + 'px'; // renders the bullet in x position
+        bulletElement.style.top = bullet.position.y + 'px'; // renders the bullet in y position
     }, 20);
 
     if (!bullet.visible) {
-        bullet;
+        bullet.pop();
     }
+}
+function spawnAsteroids() {
+    setInterval(() => {
+        visible = true;
+        asteroidPosition = {
+            x: 100,
+            y: 100,
+        };
+        const size = 50;
+        let collision = false;
+        const speed = 10;
+        const velocityAsteroid = {
+            x: 1,
+            y: 1,
+        };
+        asteroids.push(
+            new Asteorids({
+                visible,
+                size,
+                asteroidPosition,
+                collision,
+                speed,
+                velocityAsteroid,
+            })
+        );
+        const asteroidElement = document.createElement('div');
+        asteroidElement.classList.add('asteroid');
+        screen.appendChild(asteroidElement);
+        asteroidElement.style.left = asteroidPosition.x + 'px'; // renders the bullet in x position
+        asteroidElement.style.top = asteroidPosition.y + 'px'; // renders the bullet in y position
+        console.log('ASTEROIDS');
+    }, asteroidsInterval);
 }
 
 // INITIALIZE THE GAME
