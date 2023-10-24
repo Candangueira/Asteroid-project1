@@ -39,9 +39,10 @@ let mouseX = 0;
 let mouseY = 0;
 let angle = 0;
 let rotation = 0;
-let rotationBullet = 0;
+let rotationAsteroid = 0;
 let acc = 1.04;
 let asteroidsInterval = 2000;
+let asteroidVel = {};
 
 let keysPressed = {};
 const keys = {};
@@ -229,48 +230,67 @@ function shoot() {
         screen.appendChild(bulletElement); // render in the screen
         bullet.position.x += bullet.velocity.x * bullet.speed;
         bullet.position.y += bullet.velocity.y * bullet.speed;
-        bulletElement.style.transform = 'rotateBullet(' + rotation + 'deg)';
         bulletElement.style.left = bullet.position.x + 'px'; // renders the bullet in x position
         bulletElement.style.top = bullet.position.y + 'px'; // renders the bullet in y position
     }, 20);
-
-    if (!bullet.visible) {
-        bullet.pop();
-    }
 }
+
 function spawnAsteroids() {
-    setInterval(() => {
-        visible = true;
-        asteroidPosition = {
-            x: 100,
-            y: 100,
-        };
-        const size = 50;
-        let collision = false;
-        const speed = 10;
-        const velocityAsteroid = {
-            x: 1,
-            y: 1,
-        };
-        asteroids.push(
-            new Asteorids({
-                visible,
-                size,
-                asteroidPosition,
-                collision,
-                speed,
-                velocityAsteroid,
-            })
-        );
-        const asteroidElement = document.createElement('div');
-        asteroidElement.classList.add('asteroid');
-        screen.appendChild(asteroidElement);
-        asteroidElement.style.left = asteroidPosition.x + 'px'; // renders the bullet in x position
-        asteroidElement.style.top = asteroidPosition.y + 'px'; // renders the bullet in y position
-        console.log('ASTEROIDS');
-    }, asteroidsInterval);
+    randomAnglesAsteroids();
+
+    visible = true;
+    asteroidPosition = {
+        x: -200,
+        y: -200,
+    };
+    const size = 50;
+    let collision = false;
+    const speed = 10;
+    const velocityAsteroid = {
+        x: asteroidVel.x,
+        y: asteroidVel.y,
+    };
+    // ----------------------------------------------------------------
+
+    asteroids.push(
+        new Asteorids({
+            visible,
+            position: asteroidPosition,
+            size,
+            collision,
+            speed,
+            velocity: velocityAsteroid,
+        })
+    );
+    moveAsteroid();
 }
 
+function randomAnglesAsteroids() {
+    const angleAsteroid = Math.atan2(3, 5);
+    asteroidVel = {
+        x: Math.cos(angleAsteroid),
+        y: Math.sin(angleAsteroid),
+    };
+    return;
+}
+function moveAsteroid() {
+    // --- CREATES AND RENDER IT ON THE SCREEN -------------------------------------------------
+    const asteroidElement = document.createElement('div'); // creates the element asteroid
+    asteroidElement.classList.add('asteroid'); // assign a class
+    screen.appendChild(asteroidElement);
+    // -----------------------------------------------------------------------------------------
+    setInterval(() => {
+        asteroids.forEach((rockAsteroid) => {
+            asteroidElement.style.left = rockAsteroid.position.x + 'px';
+            asteroidElement.style.top = rockAsteroid.position.y + 'px';
+            rockAsteroid.position.x += 2;
+            rockAsteroid.position.y += 2;
+            asteroidElement.style.transform =
+                'rotate(' + rotationAsteroid++ + 'deg)';
+            'rotate(' + console.log(rockAsteroid.position.x);
+        }, 20);
+    });
+}
 // INITIALIZE THE GAME
 
 initialize();
