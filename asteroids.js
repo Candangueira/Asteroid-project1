@@ -50,6 +50,7 @@ const bullets = [];
 const asteroids = [];
 
 let playerElement = document.querySelector('#player');
+let testElement = document.querySelector('#test'); // DELETE
 const screen = document.querySelector('.container');
 let asteroidElement = undefined;
 
@@ -60,7 +61,16 @@ let player = new Player({
     lives: 3,
     score: 0,
 });
-
+// ------------------------------------------------- DELETE
+let test = new Player({
+    position: { x: 700, y: 400 },
+    velocity: { x: velX, y: velY },
+    acceleration: acc,
+    lives: 3,
+    score: 0,
+});
+testElement.style.top = test.position.x;
+//-----------------------------------------------------------
 console.log(player);
 
 // --------- MOVES THE PLAYER --------------------------------
@@ -293,17 +303,25 @@ function spawnAsteroid() {
 
 //-------------------------------------------------
 
-function collisionDetection(firstElement, secondElement) {
-    // if(firstElement.position.x + firstElement.style.width >= secondElement.position.x &&
-    //firstElement.position.x <= secondElement.position.x + secondElement.style.width)
-    console.log(firstElement.style.width);
+function collisionDetection(collisorA, collisorB) {
+    if (
+        collisorA.position.x + 30 >= collisorB.position.x &&
+        collisorA.position.x <= collisorB.position.x + 30 &&
+        collisorA.position.y + 30 >= collisorB.position.y &&
+        collisorA.position.y <= collisorB.position.y + 30
+    ) {
+        console.log('COLLIDE');
+    }
 }
+
 function initialize() {
     playerElement.style.top = `${player.position.y}px`;
     playerElement.style.left = `${player.position.x}px`;
     setInterval(() => {
+        collisionDetection(player, test);
+    }, 10);
+    setInterval(() => {
         spawnAsteroid();
-        //collisionDetection(playerElement, asteroidElement);
     }, 5000);
 }
 // INITIALIZE THE GAME
