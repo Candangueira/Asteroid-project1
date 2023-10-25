@@ -27,13 +27,22 @@ class Bullet {
 }
 
 class Asteorids {
-    constructor({ visible, size, position, collision, speed, velocity }) {
+    constructor({
+        visible,
+        size,
+        position,
+        collision,
+        speed,
+        velocity,
+        asteroidElement,
+    }) {
         this.visible = visible;
         this.size = size;
         this.position = position;
         this.velocity = velocity;
         this.collision = collision;
         this.speed = speed;
+        this.asteroidElement = asteroidElement;
     }
 }
 // // CACHED ELEMENTS //
@@ -46,7 +55,6 @@ let mouseX = 0;
 let mouseY = 0;
 let angle = 0;
 let rotation = 0;
-let rotationAsteroid = 0;
 let acc = 1.04;
 let asteroidsInterval = 2000;
 let asteroidVel = {};
@@ -265,7 +273,9 @@ function shoot() {
 function spawnAsteroid() {
     // --- CREATES THE CLASS AND PUT ON THE ARRAY ---------------------------------------------
     //randomAnglesAsteroids();
-
+    let asteroidElement = document.createElement('div'); // creates the element asteroid
+    let rotationAsteroid = 0;
+    // declaring some variable before the inicialization of the class
     visible = true;
     asteroidPosition = {
         x: Math.floor(Math.random() * 800),
@@ -287,12 +297,13 @@ function spawnAsteroid() {
         collision,
         speed,
         velocity: velocityAsteroid,
+        asteroidElement: asteroidElement,
     });
 
     // --- CREATES AND RENDER IT ON THE SCREEN -------------------------------------------------
     asteroids.push(asteroid);
     console.log(asteroid);
-    let asteroidElement = document.createElement('div'); // creates the element asteroid
+
     asteroidElement.style.left = asteroid.position.x + 'px';
     asteroidElement.style.top = asteroid.position.y + 'px';
     asteroidElement.classList.add('asteroid'); // assign a class
@@ -314,12 +325,12 @@ function spawnAsteroid() {
 
 //-------------------------------------------------
 
-function collisionDetection(collisorA, collisorB) {
+function collisionDetection(collisorA, collisorB, size) {
     if (
-        collisorA.position.x + 30 >= collisorB.position.x &&
-        collisorA.position.x <= collisorB.position.x + 30 &&
-        collisorA.position.y + 30 >= collisorB.position.y &&
-        collisorA.position.y <= collisorB.position.y + 30
+        collisorA.position.x + size >= collisorB.position.x &&
+        collisorA.position.x <= collisorB.position.x + size &&
+        collisorA.position.y + size >= collisorB.position.y &&
+        collisorA.position.y <= collisorB.position.y + size
     ) {
         return true;
         console.log('COLLIDE');
@@ -329,23 +340,36 @@ function collisionDetection(collisorA, collisorB) {
 function initialize() {
     playerElement.style.top = `${player.position.y}px`;
     playerElement.style.left = `${player.position.x}px`;
-    player;
+
     setInterval(() => {
-        collisionDetection(player, test);
         bullets.forEach((projectile) => {
-            // iterate through each bullet and...
-            // ... test the collision in each one of them.
-            if (collisionDetection(projectile, test)) {
-                // destroy asteroid //
-                // add score //
-                player.score += 1;
-                scoreElement.textContent = `score: ${player.score}`;
-                bulletIndex = bullets.indexOf(projectile);
-                console.log(bulletIndex);
-                // destroys the bullet in the array
-                projectile.elementRender.remove();
-                bullets.splice(bulletIndex, 1);
-            }
+            asteroids.forEach((rock) => {
+                if (collisionDetection(projectile, rock, 50)) {
+                    player.score += 1;
+                    scoreElement.textContent = `score: ${player.score}`;
+                    bulletIndex = bullets.indexOf(projectile);
+                    asteroidIndex = asteroids.indexOf(rock);
+                    // destroys the bullet and the asteroid in the array
+                    projectile.elementRender.remove();
+                    bullets.splice(bulletIndex, 1);
+                    rock.asteroidElement.remove();
+                    asteroids.splice(asteoidIndex, 1);
+                }
+            }, 20);
+
+            // ------------------- TEST ---------------------------------
+            // if (collisionDetection(projectile, test)) {
+            //     // destroy asteroid //
+            //     // add score //
+            //     player.score += 1;
+            //     scoreElement.textContent = `score: ${player.score}`;
+            //     bulletIndex = bullets.indexOf(projectile);
+            //     console.log(bulletIndex);
+            //     // destroys the bullet in the array
+            //     projectile.elementRender.remove();
+            //     bullets.splice(bulletIndex, 1);
+            // }
+            // ---------------------------------------------------------
         });
     }, 10);
 
