@@ -319,6 +319,9 @@ function initialize() {
     playerElement.style.left = `${player.position.x}px`;
     setInterval(() => {
         collisionDetection(player, test);
+        bullets.forEach((projectile) => {
+            collisionDetection(projectile, test);
+        });
     }, 10);
     setInterval(() => {
         spawnAsteroid();
