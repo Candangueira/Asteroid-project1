@@ -9,9 +9,16 @@ class Player {
     }
 }
 class Bullet {
-    constructor({ visible, angle, position, collision, speed, velocity }) {
+    constructor({
+        visible,
+        elementRender,
+        position,
+        collision,
+        speed,
+        velocity,
+    }) {
         this.visible = visible;
-
+        this.elementRender = elementRender;
         this.position = position;
         this.velocity = velocity;
         this.collision = collision;
@@ -53,6 +60,8 @@ let playerElement = document.querySelector('#player');
 let testElement = document.querySelector('#test'); // DELETE
 const screen = document.querySelector('.container');
 let asteroidElement = undefined;
+const scoreElement = document.querySelector('#score');
+const livesElement = document.querySelector('#lives');
 
 let player = new Player({
     position: { x: posX, y: posY },
@@ -88,7 +97,7 @@ document.addEventListener('keyup', function (event) {
 });
 
 // ------------ LINES -------------------------------------------------
-//  // --- UP --------------------------------------------
+//  // -----------------------------------------------------------
 onkeydown = onkeyup = function (e) {
     e = e || event; // to deal with IE
     keys[e.code] = e.type == 'keydown';
@@ -210,9 +219,10 @@ function checkPlayerLimits() {
 }
 
 function shoot() {
+    const bulletElement = document.createElement('div'); // creates the element
     let bullet = new Bullet({
         visible: true,
-        angle: 0,
+        elementRender: bulletElement,
         position: {
             x: player.position.x,
             y: player.position.y,
@@ -225,15 +235,15 @@ function shoot() {
         collision: false,
     });
 
-    bullets.push(bullet);
     console.log(bullets);
 
-    const bulletElement = document.createElement('div'); // creates the element
     bulletElement.style.left = bullet.position.x + 'px'; // I dont know why, but if a dont put those 2 lines before and during the setInterval
     bulletElement.style.top = bullet.position.y + 'px'; // the bullet is first rendered in the top left corner of the screen.
     bulletElement.classList.add('bullet'); // adds a class
     bulletElement.style.transform = 'rotate(' + rotation + 'deg)';
     screen.appendChild(bulletElement); // render in the screen
+
+    bullets.push(bullet); // pushes the class into the array
 
     setInterval(function () {
         bullet.position.x += bullet.velocity.x * bullet.speed;
@@ -243,22 +253,23 @@ function shoot() {
     }, 20);
 }
 
-function randomAnglesAsteroids() {
-    const angleAsteroid = Math.atan2(3, 5);
-    asteroidVel = {
-        x: Math.cos(angleAsteroid),
-        y: Math.sin(angleAsteroid),
-    };
-    return;
-}
+// function randomAnglesAsteroids() {
+//     const angleAsteroid = Math.atan2(3, 5);
+//     asteroidVel = {
+//         x: Math.cos(angleAsteroid),
+//         y: Math.sin(angleAsteroid),
+//     };
+//     return;
+// }
+
 function spawnAsteroid() {
     // --- CREATES THE CLASS AND PUT ON THE ARRAY ---------------------------------------------
     //randomAnglesAsteroids();
 
     visible = true;
     asteroidPosition = {
-        x: -200,
-        y: -200,
+        x: Math.floor(Math.random() * 800),
+        y: 0,
     };
     const size = 50;
     let collision = false;
@@ -281,7 +292,7 @@ function spawnAsteroid() {
     // --- CREATES AND RENDER IT ON THE SCREEN -------------------------------------------------
     asteroids.push(asteroid);
     console.log(asteroid);
-    asteroidElement = document.createElement('div'); // creates the element asteroid
+    let asteroidElement = document.createElement('div'); // creates the element asteroid
     asteroidElement.style.left = asteroid.position.x + 'px';
     asteroidElement.style.top = asteroid.position.y + 'px';
     asteroidElement.classList.add('asteroid'); // assign a class
@@ -310,6 +321,7 @@ function collisionDetection(collisorA, collisorB) {
         collisorA.position.y + 30 >= collisorB.position.y &&
         collisorA.position.y <= collisorB.position.y + 30
     ) {
+        return true;
         console.log('COLLIDE');
     }
 }
@@ -317,12 +329,26 @@ function collisionDetection(collisorA, collisorB) {
 function initialize() {
     playerElement.style.top = `${player.position.y}px`;
     playerElement.style.left = `${player.position.x}px`;
+    player;
     setInterval(() => {
         collisionDetection(player, test);
         bullets.forEach((projectile) => {
-            collisionDetection(projectile, test);
+            // iterate through each bullet and...
+            // ... test the collision in each one of them.
+            if (collisionDetection(projectile, test)) {
+                // destroy asteroid //
+                // add score //
+                player.score += 1;
+                scoreElement.textContent = `score: ${player.score}`;
+                bulletIndex = bullets.indexOf(projectile);
+                console.log(bulletIndex);
+                // destroys the bullet in the array
+                projectile.elementRender.remove();
+                bullets.splice(bulletIndex, 1);
+            }
         });
     }, 10);
+
     setInterval(() => {
         spawnAsteroid();
     }, 5000);
