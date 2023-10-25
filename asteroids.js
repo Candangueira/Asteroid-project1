@@ -51,6 +51,7 @@ const asteroids = [];
 
 let playerElement = document.querySelector('#player');
 const screen = document.querySelector('.container');
+let asteroidElement = undefined;
 
 let player = new Player({
     position: { x: posX, y: posY },
@@ -197,13 +198,6 @@ function checkPlayerLimits() {
         player.position.y = 770;
     }
 }
-function initialize() {
-    playerElement.style.top = `${player.position.y}px`;
-    playerElement.style.left = `${player.position.x}px`;
-    setInterval(() => {
-        spawnAsteroid();
-    }, 5000);
-}
 
 function shoot() {
     let bullet = new Bullet({
@@ -225,11 +219,13 @@ function shoot() {
     console.log(bullets);
 
     const bulletElement = document.createElement('div'); // creates the element
+    bulletElement.style.left = bullet.position.x + 'px'; // I dont know why, but if a dont put those 2 lines before and during the setInterval
+    bulletElement.style.top = bullet.position.y + 'px'; // the bullet is first rendered in the top left corner of the screen.
     bulletElement.classList.add('bullet'); // adds a class
     bulletElement.style.transform = 'rotate(' + rotation + 'deg)';
+    screen.appendChild(bulletElement); // render in the screen
 
     setInterval(function () {
-        screen.appendChild(bulletElement); // render in the screen
         bullet.position.x += bullet.velocity.x * bullet.speed;
         bullet.position.y += bullet.velocity.y * bullet.speed;
         bulletElement.style.left = bullet.position.x + 'px'; // renders the bullet in x position
@@ -247,7 +243,7 @@ function randomAnglesAsteroids() {
 }
 function spawnAsteroid() {
     // --- CREATES THE CLASS AND PUT ON THE ARRAY ---------------------------------------------
-    randomAnglesAsteroids();
+    //randomAnglesAsteroids();
 
     visible = true;
     asteroidPosition = {
@@ -263,33 +259,52 @@ function spawnAsteroid() {
     };
     // ----------------------------------------------------------------
 
-    asteroids.push(
-        new Asteorids({
-            visible,
-            position: asteroidPosition,
-            size,
-            collision,
-            speed,
-            velocity: velocityAsteroid,
-        })
-    );
+    let asteroid = new Asteorids({
+        visible,
+        position: asteroidPosition,
+        size,
+        collision,
+        speed,
+        velocity: velocityAsteroid,
+    });
+
     // --- CREATES AND RENDER IT ON THE SCREEN -------------------------------------------------
-    const asteroidElement = document.createElement('div'); // creates the element asteroid
+    asteroids.push(asteroid);
+    console.log(asteroid);
+    asteroidElement = document.createElement('div'); // creates the element asteroid
+    asteroidElement.style.left = asteroid.position.x + 'px';
+    asteroidElement.style.top = asteroid.position.y + 'px';
     asteroidElement.classList.add('asteroid'); // assign a class
     screen.appendChild(asteroidElement);
 
     // -----------------------------------------------------------------------------------------
+
     setInterval(() => {
-        asteroids.forEach((rockAsteroid) => {
-            asteroidElement.style.left = rockAsteroid.position.x + 'px';
-            asteroidElement.style.top = rockAsteroid.position.y + 'px';
-            rockAsteroid.position.x += 2;
-            rockAsteroid.position.y += 2;
-            asteroidElement.style.transform =
-                'rotate(' + rotationAsteroid++ + 'deg)';
-            console.log(rockAsteroid.position.x);
-        }, 2000);
-    });
+        asteroid.position.x += 2;
+        asteroid.position.y += 2;
+        asteroidElement.style.left = asteroid.position.x + 'px';
+        asteroidElement.style.top = asteroid.position.y + 'px';
+        asteroidElement.style.transform =
+            'rotate(' + rotationAsteroid++ + 'deg)';
+    }, 20);
+}
+
+//-------------------------------------------------
+
+//-------------------------------------------------
+
+function collisionDetection(firstElement, secondElement) {
+    // if(firstElement.position.x + firstElement.style.width >= secondElement.position.x &&
+    //firstElement.position.x <= secondElement.position.x + secondElement.style.width)
+    console.log(firstElement.style.width);
+}
+function initialize() {
+    playerElement.style.top = `${player.position.y}px`;
+    playerElement.style.left = `${player.position.x}px`;
+    setInterval(() => {
+        spawnAsteroid();
+        //collisionDetection(playerElement, asteroidElement);
+    }, 5000);
 }
 // INITIALIZE THE GAME
 
