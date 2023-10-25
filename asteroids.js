@@ -58,6 +58,7 @@ let rotation = 0;
 let acc = 1.04;
 let asteroidsInterval = 2000;
 let asteroidVel = {};
+let gamerunning = true;
 
 let keysPressed = {};
 const keys = {};
@@ -65,7 +66,7 @@ const bullets = [];
 const asteroids = [];
 
 let playerElement = document.querySelector('#player');
-let testElement = document.querySelector('#test'); // DELETE
+
 const screen = document.querySelector('.container');
 let asteroidElement = undefined;
 const scoreElement = document.querySelector('#score');
@@ -78,16 +79,7 @@ let player = new Player({
     lives: 3,
     score: 0,
 });
-// ------------------------------------------------- DELETE
-let test = new Player({
-    position: { x: 700, y: 400 },
-    velocity: { x: velX, y: velY },
-    acceleration: acc,
-    lives: 3,
-    score: 0,
-});
-testElement.style.top = test.position.x;
-//-----------------------------------------------------------
+
 console.log(player);
 
 // --------- MOVES THE PLAYER --------------------------------
@@ -323,8 +315,6 @@ function spawnAsteroid() {
 
 //-------------------------------------------------
 
-//-------------------------------------------------
-
 function collisionDetection(collisorA, collisorB, size) {
     if (
         collisorA.position.x + size >= collisorB.position.x &&
@@ -333,8 +323,11 @@ function collisionDetection(collisorA, collisorB, size) {
         collisorA.position.y <= collisorB.position.y + size
     ) {
         return true;
-        console.log('COLLIDE');
     }
+}
+
+function restartGame() {
+    initialize();
 }
 
 function initialize() {
@@ -342,6 +335,7 @@ function initialize() {
     playerElement.style.left = `${player.position.x}px`;
 
     setInterval(() => {
+        // Detects collision bullet / asteroid
         bullets.forEach((projectile) => {
             asteroids.forEach((rock) => {
                 if (collisionDetection(projectile, rock, 50)) {
@@ -353,23 +347,25 @@ function initialize() {
                     projectile.elementRender.remove();
                     bullets.splice(bulletIndex, 1);
                     rock.asteroidElement.remove();
-                    asteroids.splice(asteoidIndex, 1);
+                    asteroids.splice(asteroidIndex, 1);
                 }
             }, 20);
 
-            // ------------------- TEST ---------------------------------
-            // if (collisionDetection(projectile, test)) {
-            //     // destroy asteroid //
-            //     // add score //
-            //     player.score += 1;
-            //     scoreElement.textContent = `score: ${player.score}`;
-            //     bulletIndex = bullets.indexOf(projectile);
-            //     console.log(bulletIndex);
-            //     // destroys the bullet in the array
-            //     projectile.elementRender.remove();
-            //     bullets.splice(bulletIndex, 1);
-            // }
-            // ---------------------------------------------------------
+            asteroids.forEach((asteroid) => {
+                if (collisionDetection(player, asteroid, 30)) {
+                    if (player.lives > 0) {
+                        player.lives -= 1;
+                        livesElement.textContent = `lives: ${player.lives}`;
+                        player.position.x = 800;
+                        player.position.y = 400;
+                        console.log('DEAD');
+                    } else {
+                        gamerunning = false;
+                        console.log('GAMEOVER');
+                        restartGame();
+                    }
+                }
+            });
         });
     }, 10);
 

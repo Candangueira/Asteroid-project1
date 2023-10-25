@@ -34,16 +34,6 @@
         width: 60px;
 }
 
-#test {
-    display: flex;
-    align-content: center;
-    position: absolute;
-    top: 400px;
-    left: 700px;
-    background: rgb(185, 44, 44);
-    height: 30px;
-    width: 30px;
-}
 
 #lives {
     display: inline;
