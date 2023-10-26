@@ -48,3 +48,16 @@
     text-align: end;
     color: aliceblue;
 }
+
+.game-over {
+    position:absolute;
+    top: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1800px;
+    height: 150px;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.973);
+    background-color: rgb(224, 36, 52);
+}

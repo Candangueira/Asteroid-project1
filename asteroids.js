@@ -199,8 +199,6 @@ document.addEventListener('click', function (event) {
         y: Math.sin(angleBullet),
     };
     shoot();
-    // console.log(angleBullet);
-    // console.log(Math.cos(angleBullet));
 });
 
 // FUNCTIONS // ----------------------------------------------
@@ -236,8 +234,6 @@ function shoot() {
         speed: 10,
         collision: false,
     });
-
-    console.log(bullets);
 
     bulletElement.style.left = bullet.position.x + 'px'; // I dont know why, but if a dont put those 2 lines before and during the setInterval
     bulletElement.style.top = bullet.position.y + 'px'; // the bullet is first rendered in the top left corner of the screen.
@@ -347,8 +343,6 @@ function spawnAsteroid() {
 
     // --- CREATES AND RENDER IT ON THE SCREEN -------------------------------------------------
     asteroids.push(asteroid);
-    console.log(asteroid);
-
     asteroidElement.style.left = asteroid.position.x + 'px';
     asteroidElement.style.top = asteroid.position.y + 'px';
     asteroidElement.classList.add('asteroid'); // assign a class
@@ -366,7 +360,7 @@ function spawnAsteroid() {
     }, 20);
 }
 
-//-------------------------------------------------
+// --------------------------------------------------------------------------------------------
 
 function collisionDetection(collisorA, collisorB, size) {
     if (
@@ -379,7 +373,31 @@ function collisionDetection(collisorA, collisorB, size) {
     }
 }
 
+// --------------------------------------------------------------------------------------------
+
 function restartGame() {
+    player.position.x = 800;
+    player.position.y = 400;
+    playerElement.style.top = `${player.position.y}px`;
+    playerElement.style.left = `${player.position.x}px`;
+    player.score = 0;
+    scoreElement.textContent = `score: ${player.score}`;
+    player.lives = 3;
+    livesElement.textContent = `lives: ${player.lives}`;
+    let gamerunning = true;
+    let keysPressed = {};
+    const keys = {};
+    const bullets = [];
+    const asteroids = [];
+    // remove all the projectiles from the screen
+    bullets.forEach((projectile) => {
+        projectile.elementRender.remove();
+        bullets.splice(bulletIndex, 1);
+    });
+    asteroids.forEach((asteroid) => {
+        asteroid.asteroidElement.remove();
+        asteroids.splice(asteroidIndex, 1);
+    });
     initialize();
 }
 
@@ -413,7 +431,7 @@ function initialize() {
                     asteroid.asteroidElement.remove();
                     asteroids.splice(asteroidIndex, 1);
                 }
-            });
+            }, 10);
         });
         asteroids.forEach((asteroid) => {
             // destroy asteroids out of the screen
@@ -439,13 +457,16 @@ function initialize() {
                     console.log('DEAD');
                 } else {
                     gamerunning = false;
+                    const gameOverElement = document.createElement('h1');
+                    gameOverElement.textContent = 'GAME OVER';
+                    gameOverElement.classList.add('game-over');
+                    screen.appendChild(gameOverElement);
                     console.log('GAMEOVER');
                     // restartGame();
                 }
             }
         });
     }, 10);
-
     setInterval(() => {
         spawnAsteroid();
     }, 5000);
@@ -453,3 +474,6 @@ function initialize() {
 // INITIALIZE THE GAME
 
 initialize();
+setInterval(() => {
+    restartGame();
+}, 5000);
