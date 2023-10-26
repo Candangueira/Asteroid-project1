@@ -386,8 +386,20 @@ function initialize() {
     playerElement.style.left = `${player.position.x}px`;
 
     setInterval(() => {
-        // Detects collision bullet / asteroid
         bullets.forEach((projectile) => {
+            // removes the bullet that are out of the screen
+            if (
+                projectile.position.x > 1780 ||
+                projectile.position.x < 0 ||
+                projectile.position.y < 0 ||
+                projectile.position.y > 780
+            ) {
+                bulletIndex = bullets.indexOf(projectile);
+                // destroys the bullet and the asteroid in the array
+                projectile.elementRender.remove();
+                bullets.splice(bulletIndex, 1);
+            }
+            // Detects collision bullet / asteroid
             asteroids.forEach((rock) => {
                 if (collisionDetection(projectile, rock, 50)) {
                     player.score += 1;
@@ -402,6 +414,7 @@ function initialize() {
                 }
             }, 20);
         });
+        // Detects collision player / asteroid
         asteroids.forEach((asteroid) => {
             if (collisionDetection(player, asteroid, 30)) {
                 if (player.lives > 0) {
