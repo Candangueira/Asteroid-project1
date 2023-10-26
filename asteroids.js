@@ -280,40 +280,64 @@ function spawnAsteroid() {
         x: 0,
         y: 0,
     };
-    let visible = true;
-    let randomNumber = Math.floor(Math.random() * 2);
+    let randomNumber = Math.floor(Math.random() * 4);
     console.log(randomNumber);
+
     // randomizes from where the asteroids should come
+    // ----------------- LEFT ---------------------
     if (randomNumber === 0) {
         asteroidPosition = {
-            x: Math.floor(Math.random() * 800),
+            x: Math.floor(Math.random() * 1800),
             y: 0,
         };
         velocityAsteroid = {
             x: generateRandom(-3, 2),
             y: generateRandom(1, 7),
         };
-    } else if (randomNumber === 1) {
+    }
+    // ----------------- TOP ---------------------
+    else if (randomNumber === 1) {
         asteroidPosition = {
             x: 0,
-            y: Math.floor(Math.random() * 400),
+            y: Math.floor(Math.random() * 800),
         };
         velocityAsteroid = {
             x: generateRandom(2, 7),
             y: generateRandom(-3, 2),
         };
     }
+    // ---------------- RIGHT ---------------------
+    else if (randomNumber === 2) {
+        asteroidPosition = {
+            x: 1800,
+            y: Math.floor(Math.random() * 800),
+        };
+        velocityAsteroid = {
+            x: generateRandom(-2, -7),
+            y: generateRandom(-3, -2),
+        };
+    }
+    // -------------- BOTTOM ---------------------
+    else if (randomNumber === 3) {
+        asteroidPosition = {
+            x: Math.floor(Math.random() * 1800),
+            y: 800,
+        };
+        velocityAsteroid = {
+            x: generateRandom(-2, -1),
+            y: generateRandom(-1, -4),
+        };
+    }
+    // ---------------------------------------------------------------
+
     const size = 50;
-    let collision = false;
     const speed = 10;
 
     // ----------------------------------------------------------------
 
     let asteroid = new Asteorids({
-        visible,
         position: asteroidPosition,
         size,
-        collision,
         speed,
         velocity: velocityAsteroid,
         asteroidElement: asteroidElement,
@@ -399,7 +423,7 @@ function initialize() {
 
     setInterval(() => {
         spawnAsteroid();
-    }, 3000);
+    }, 5000);
 }
 // INITIALIZE THE GAME
 
