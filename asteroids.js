@@ -377,24 +377,23 @@ function initialize() {
                     asteroids.splice(asteroidIndex, 1);
                 }
             }, 20);
-
-            asteroids.forEach((asteroid) => {
-                if (collisionDetection(player, asteroid, 30)) {
-                    if (player.lives > 0) {
-                        player.lives -= 1;
-                        livesElement.textContent = `lives: ${player.lives}`;
-                        player.position.x = 800;
-                        player.position.y = 400;
-                        playerElement.style.top = `${player.position.y}px`;
-                        playerElement.style.left = `${player.position.x}px`;
-                        console.log('DEAD');
-                    } else {
-                        gamerunning = false;
-                        console.log('GAMEOVER');
-                        // restartGame();
-                    }
+        });
+        asteroids.forEach((asteroid) => {
+            if (collisionDetection(player, asteroid, 30)) {
+                if (player.lives > 0) {
+                    player.lives -= 1;
+                    livesElement.textContent = `lives: ${player.lives}`;
+                    player.position.x = 800;
+                    player.position.y = 400;
+                    playerElement.style.top = `${player.position.y}px`;
+                    playerElement.style.left = `${player.position.x}px`;
+                    console.log('DEAD');
+                } else {
+                    gamerunning = false;
+                    console.log('GAMEOVER');
+                    // restartGame();
                 }
-            });
+            }
         });
     }, 10);
 
