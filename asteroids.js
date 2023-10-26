@@ -199,6 +199,8 @@ document.addEventListener('click', function (event) {
         y: Math.sin(angleBullet),
     };
     shoot();
+    // console.log(angleBullet);
+    // console.log(Math.cos(angleBullet));
 });
 
 // FUNCTIONS // ----------------------------------------------
@@ -253,33 +255,58 @@ function shoot() {
     }, 20);
 }
 
-// function randomAnglesAsteroids() {
-//     const angleAsteroid = Math.atan2(3, 5);
-//     asteroidVel = {
-//         x: Math.cos(angleAsteroid),
-//         y: Math.sin(angleAsteroid),
-//     };
-//     return;
-// }
+function generateRandom(min, max) {
+    // find diff
+    let difference = max - min;
+
+    // generate random number
+    let rand = Math.random();
+
+    // multiply with difference
+    rand = Math.floor(rand * difference);
+
+    // add with min value
+    rand = rand + min;
+
+    return rand;
+}
 
 function spawnAsteroid() {
     // --- CREATES THE CLASS AND PUT ON THE ARRAY ---------------------------------------------
-    //randomAnglesAsteroids();
+
     let asteroidElement = document.createElement('div'); // creates the element asteroid
     let rotationAsteroid = 0;
-    // declaring some variable before the inicialization of the class
-    visible = true;
-    asteroidPosition = {
-        x: Math.floor(Math.random() * 800),
+    let asteroidPosition = {
+        x: 0,
         y: 0,
     };
+    let visible = true;
+    let randomNumber = Math.floor(Math.random() * 2);
+    console.log(randomNumber);
+    // randomizes from where the asteroids should come
+    if (randomNumber === 0) {
+        asteroidPosition = {
+            x: Math.floor(Math.random() * 800),
+            y: 0,
+        };
+        velocityAsteroid = {
+            x: generateRandom(-3, 2),
+            y: generateRandom(1, 7),
+        };
+    } else if (randomNumber === 1) {
+        asteroidPosition = {
+            x: 0,
+            y: Math.floor(Math.random() * 400),
+        };
+        velocityAsteroid = {
+            x: generateRandom(2, 7),
+            y: generateRandom(-3, 2),
+        };
+    }
     const size = 50;
     let collision = false;
     const speed = 10;
-    const velocityAsteroid = {
-        x: asteroidVel.x,
-        y: asteroidVel.y,
-    };
+
     // ----------------------------------------------------------------
 
     let asteroid = new Asteorids({
@@ -304,8 +331,8 @@ function spawnAsteroid() {
     // -----------------------------------------------------------------------------------------
 
     setInterval(() => {
-        asteroid.position.x += 2;
-        asteroid.position.y += 2;
+        asteroid.position.x += asteroid.velocity.x;
+        asteroid.position.y += asteroid.velocity.y;
         asteroidElement.style.left = asteroid.position.x + 'px';
         asteroidElement.style.top = asteroid.position.y + 'px';
         asteroidElement.style.transform =
@@ -358,11 +385,13 @@ function initialize() {
                         livesElement.textContent = `lives: ${player.lives}`;
                         player.position.x = 800;
                         player.position.y = 400;
+                        playerElement.style.top = `${player.position.y}px`;
+                        playerElement.style.left = `${player.position.x}px`;
                         console.log('DEAD');
                     } else {
                         gamerunning = false;
                         console.log('GAMEOVER');
-                        restartGame();
+                        // restartGame();
                     }
                 }
             });
@@ -371,7 +400,7 @@ function initialize() {
 
     setInterval(() => {
         spawnAsteroid();
-    }, 5000);
+    }, 3000);
 }
 // INITIALIZE THE GAME
 
