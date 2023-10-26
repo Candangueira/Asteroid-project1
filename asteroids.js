@@ -255,6 +255,8 @@ function shoot() {
     }, 20);
 }
 
+// ---- I got this function from: https://www.educative.io/answers/how-to-generate-a-random-number-between-a-range-in-javascript --- //
+
 function generateRandom(min, max) {
     // find diff
     let difference = max - min;
@@ -270,7 +272,7 @@ function generateRandom(min, max) {
 
     return rand;
 }
-
+// ------------------------------------------------------------------------------------------------------------------------------------
 function spawnAsteroid() {
     // --- CREATES THE CLASS AND PUT ON THE ARRAY ---------------------------------------------
 
@@ -392,30 +394,40 @@ function initialize() {
                 projectile.position.x > 1780 ||
                 projectile.position.x < 0 ||
                 projectile.position.y < 0 ||
-                projectile.position.y > 780
+                projectile.position.y > 800
             ) {
                 bulletIndex = bullets.indexOf(projectile);
-                // destroys the bullet and the asteroid in the array
                 projectile.elementRender.remove();
                 bullets.splice(bulletIndex, 1);
             }
-            // Detects collision bullet / asteroid
-            asteroids.forEach((rock) => {
-                if (collisionDetection(projectile, rock, 50)) {
+            // removes asteroids that are out of the screen
+            asteroids.forEach((asteroid) => {
+                if (collisionDetection(projectile, asteroid, 50)) {
                     player.score += 1;
                     scoreElement.textContent = `score: ${player.score}`;
                     bulletIndex = bullets.indexOf(projectile);
-                    asteroidIndex = asteroids.indexOf(rock);
+                    asteroidIndex = asteroids.indexOf(asteroid);
                     // destroys the bullet and the asteroid in the array
                     projectile.elementRender.remove();
                     bullets.splice(bulletIndex, 1);
-                    rock.asteroidElement.remove();
+                    asteroid.asteroidElement.remove();
                     asteroids.splice(asteroidIndex, 1);
                 }
-            }, 20);
+            });
         });
-        // Detects collision player / asteroid
         asteroids.forEach((asteroid) => {
+            // destroy asteroids out of the screen
+            if (
+                asteroid.position.x > 1800 ||
+                asteroid.position.x < -50 ||
+                asteroid.position.y < -50 ||
+                asteroid.position.y > 800
+            ) {
+                asteroidIndex = asteroids.indexOf(asteroid);
+                asteroid.asteroidElement.remove();
+                asteroids.splice(asteroidIndex, 1);
+            }
+            // Detects collision player / asteroid
             if (collisionDetection(player, asteroid, 30)) {
                 if (player.lives > 0) {
                     player.lives -= 1;
