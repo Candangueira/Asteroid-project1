@@ -59,11 +59,12 @@ let acc = 1.04;
 let asteroidsInterval = 5000;
 let asteroidVel = {};
 let gamerunning = true;
+let randomNumber = Math.floor(Math.random() * 4);
 
 let keysPressed = {};
-const keys = {};
-const bullets = [];
-const asteroids = [];
+let keys = {};
+let bullets = [];
+let asteroids = [];
 
 let playerElement = document.querySelector('#player');
 const screen = document.querySelector('.container');
@@ -284,7 +285,7 @@ function spawnAsteroid() {
         x: 0,
         y: 0,
     };
-    let randomNumber = Math.floor(Math.random() * 4);
+    randomNumber = Math.floor(Math.random() * 4);
 
     // randomizes from where the asteroids should come
     // ----------------- LEFT ---------------------
@@ -382,11 +383,15 @@ function collisionDetection(collisorA, collisorB, size) {
 
 function restartGame() {
     // remove all the projectiles from the screen
+    console.log(asteroids);
     bullets.forEach((projectile) => {
+        bulletIndex = bullets.indexOf(projectile);
         projectile.elementRender.remove();
         bullets.splice(bulletIndex, 1);
     });
+
     asteroids.forEach((asteroid) => {
+        asteroidIndex = asteroids.indexOf(asteroid);
         asteroid.asteroidElement.remove();
         asteroids.splice(asteroidIndex, 1);
     });
@@ -404,7 +409,6 @@ function restartGame() {
     bullets = [];
     asteroids = [];
     asteroidsInterval = 5000;
-
     initialize();
 }
 
@@ -425,7 +429,6 @@ function initialize() {
                 projectile.elementRender.remove();
                 bullets.splice(bulletIndex, 1);
             }
-            // removes asteroids that are out of the screen
             asteroids.forEach((asteroid) => {
                 if (collisionDetection(projectile, asteroid, 50)) {
                     player.score += 1;
@@ -438,7 +441,7 @@ function initialize() {
                     asteroid.asteroidElement.remove();
                     asteroids.splice(asteroidIndex, 1);
                 }
-            }, 1);
+            }, 10);
         });
         asteroids.forEach((asteroid) => {
             // destroy asteroids out of the screen
@@ -453,9 +456,9 @@ function initialize() {
                 asteroids.splice(asteroidIndex, 1);
             }
             // Detects collision player / asteroid
-            if (collisionDetection(player, asteroid, 30)) {
-                if (player.lives > 1) {
-                    player.lives -= 1;
+            if (collisionDetection(player, asteroid, 40)) {
+                player.lives -= 1;
+                if (player.lives > 0) {
                     livesElement.textContent = `lives: ${player.lives}`;
                     player.position.x = 800;
                     player.position.y = 400;
@@ -463,10 +466,12 @@ function initialize() {
                     playerElement.style.left = `${player.position.x}px`;
                 } else {
                     gamerunning = false;
+                    livesElement.textContent = `lives: 0`;
                     const gameOverElement = document.createElement('h1');
                     gameOverElement.textContent = 'GAME OVER';
                     gameOverElement.classList.add('game-over');
                     screen.appendChild(gameOverElement);
+
                     setTimeout(() => {
                         restartGame();
                         gameOverElement.remove();
@@ -475,9 +480,10 @@ function initialize() {
             }
         });
     }, 10);
+
     setInterval(() => {
         spawnAsteroid();
-    }, 5000);
+    }, asteroidsInterval);
 }
 // INITIALIZE THE GAME
 

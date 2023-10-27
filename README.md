@@ -1,32 +1,45 @@
 # Asteroids Game
 
-## Instructions
+Project 1 of SEI, an Asteroids based game.
 
-Observations 1
+#💻 Click here to see my live project!
+[Asteroids Project](https://github.com/Candangueira/Asteroid-project1)
 
-Observations 2 (you have to break lines)
+#📄 About
+How to use my Asteroids.
 
-```js
-const blockOfCode = 'true';
-```
+-   WASD move the player.
+-   Cursor aims the laser.
+-   Left click in the mouse shoot the projectile.
 
-```css
-main {
-    text-aling: ;
-}
-```
-
-generic code sample `git add .`
-
--   Item 1
--   Item 2
--   Item 3
-
-1. Number 1
-1. Number 2
-1. Number 3
-
--   Link: [Google](https://google.com)
--   Link to css: [css](./style.css)
+# Add in-app screenshots.
 
 ![image](https://placedog.net/500)
+✏️ Planning & Problem Solving
+Talk about approach to the problem.
+Add screenshots/drawings of doodles/plans during the planning phase.
+Flow charts of app logic. Wireframing
+
+# 🚀 Cool tech
+
+Javascript, HTML and CSS.
+
+#😱 Bugs to fix 💩
+
+-   Bugs in the movement, diagonals goes faster than straight lines.
+-   If you dont move the cursor it doesnt aims.
+-   The collisions in the Asteroids are a bit off.
+
+## Buttons to not click too many times (cause its broken 😒)
+
+-   Restart Button spawns too many Asteroids.
+
+#😭 Lessons learnt
+
+-   I would focus on the essencial parts first, and leave the details and optimization for later.
+
+✅ Future features
+
+-   Add inercia.
+-   Splitting asteroids when hit by a projectile.
+-
