@@ -1,5 +1,6 @@
 
 .container {
+    pointer-events: none;
     position: absolute;
     height: 800px;
     width: 1800px;
