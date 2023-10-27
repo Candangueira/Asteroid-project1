@@ -48,15 +48,15 @@ class Asteorids {
 // // CACHED ELEMENTS //
 let posX = 800;
 let posY = 400;
-let velX = 5.5;
-let velY = 5.5;
+let velX = 8;
+let velY = 8;
 let bulletVel = {};
 let mouseX = 0;
 let mouseY = 0;
 let angle = 0;
 let rotation = 0;
 let acc = 1.04;
-let asteroidsInterval = 2000;
+let asteroidsInterval = 5000;
 let asteroidVel = {};
 let gamerunning = true;
 
@@ -66,11 +66,11 @@ const bullets = [];
 const asteroids = [];
 
 let playerElement = document.querySelector('#player');
-
 const screen = document.querySelector('.container');
 let asteroidElement = undefined;
 const scoreElement = document.querySelector('#score');
 const livesElement = document.querySelector('#lives');
+const restartButton = document.querySelector('#restart-button');
 
 let player = new Player({
     position: { x: posX, y: posY },
@@ -80,10 +80,8 @@ let player = new Player({
     score: 0,
 });
 
-console.log(player);
-
 // --------- MOVES THE PLAYER --------------------------------
-// ! BUG ! ( If you press 2 keys at the same time it doesnt move on diagonal )
+// ! BUG ! ( In diagonals the player moves 2 times faster )
 
 document.addEventListener('keyup', function (event) {
     keysPressed[event.key] = false;
@@ -97,7 +95,8 @@ document.addEventListener('keyup', function (event) {
 });
 
 // ------------ LINES -------------------------------------------------
-//  // -----------------------------------------------------------
+//  // ----------------------------------------------------------------
+// got lines: 100, 101, 102 from: https://stackoverflow.com/questions/5203407/how-to-detect-if-multiple-keys-are-pressed-at-once-using-javascript
 onkeydown = onkeyup = function (e) {
     e = e || event; // to deal with IE
     keys[e.code] = e.type == 'keydown';
@@ -199,6 +198,13 @@ document.addEventListener('click', function (event) {
         y: Math.sin(angleBullet),
     };
     shoot();
+});
+
+// ----- RESTART BUTTON --------------------------------------
+restartButton.addEventListener('click', function (event) {
+    if (event.target) {
+        restartGame();
+    }
 });
 
 // FUNCTIONS // ----------------------------------------------
@@ -375,19 +381,6 @@ function collisionDetection(collisorA, collisorB, size) {
 // --------------------------------------------------------------------------------------------
 
 function restartGame() {
-    player.position.x = 800;
-    player.position.y = 400;
-    playerElement.style.top = `${player.position.y}px`;
-    playerElement.style.left = `${player.position.x}px`;
-    player.score = 0;
-    scoreElement.textContent = `score: ${player.score}`;
-    player.lives = 3;
-    livesElement.textContent = `lives: ${player.lives}`;
-    let gamerunning = true;
-    let keysPressed = {};
-    const keys = {};
-    const bullets = [];
-    const asteroids = [];
     // remove all the projectiles from the screen
     bullets.forEach((projectile) => {
         projectile.elementRender.remove();
@@ -397,6 +390,21 @@ function restartGame() {
         asteroid.asteroidElement.remove();
         asteroids.splice(asteroidIndex, 1);
     });
+    player.position.x = 800;
+    player.position.y = 400;
+    playerElement.style.top = `${player.position.y}px`;
+    playerElement.style.left = `${player.position.x}px`;
+    player.score = 0;
+    scoreElement.textContent = `score: ${player.score}`;
+    player.lives = 3;
+    livesElement.textContent = `lives: ${player.lives}`;
+    gamerunning = true;
+    keysPressed = {};
+    keys = {};
+    bullets = [];
+    asteroids = [];
+    asteroidsInterval = 5000;
+
     initialize();
 }
 
@@ -430,7 +438,7 @@ function initialize() {
                     asteroid.asteroidElement.remove();
                     asteroids.splice(asteroidIndex, 1);
                 }
-            }, 10);
+            }, 1);
         });
         asteroids.forEach((asteroid) => {
             // destroy asteroids out of the screen
@@ -446,22 +454,23 @@ function initialize() {
             }
             // Detects collision player / asteroid
             if (collisionDetection(player, asteroid, 30)) {
-                if (player.lives > 0) {
+                if (player.lives > 1) {
                     player.lives -= 1;
                     livesElement.textContent = `lives: ${player.lives}`;
                     player.position.x = 800;
                     player.position.y = 400;
                     playerElement.style.top = `${player.position.y}px`;
                     playerElement.style.left = `${player.position.x}px`;
-                    console.log('DEAD');
                 } else {
                     gamerunning = false;
                     const gameOverElement = document.createElement('h1');
                     gameOverElement.textContent = 'GAME OVER';
                     gameOverElement.classList.add('game-over');
                     screen.appendChild(gameOverElement);
-                    console.log('GAMEOVER');
-                    // restartGame();
+                    setTimeout(() => {
+                        restartGame();
+                        gameOverElement.remove();
+                    }, 3000);
                 }
             }
         });
@@ -473,6 +482,3 @@ function initialize() {
 // INITIALIZE THE GAME
 
 initialize();
-setInterval(() => {
-    restartGame();
-}, 5000);

@@ -62,7 +62,19 @@
     text-align: end;
     color: aliceblue;
 }
-
+#restart-button {
+    position: relative;
+    height: 80px;
+    width: 80px;
+    top: 700px;
+    left: 20px;
+}
+#restart-button-img {
+    position: relative;
+    left: -80px;
+    top: -75px;
+    scale: 0.37;
+}
 .game-over {
     font-family: 'Press Start 2P';
     position: absolute;
