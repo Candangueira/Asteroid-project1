@@ -279,7 +279,6 @@ function spawnAsteroid() {
         y: 0,
     };
     let randomNumber = Math.floor(Math.random() * 4);
-    console.log(randomNumber);
 
     // randomizes from where the asteroids should come
     // ----------------- LEFT ---------------------

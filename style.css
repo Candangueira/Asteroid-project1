@@ -1,8 +1,9 @@
+
 .container {
     position: absolute;
     height: 800px;
     width: 1800px;
-    background: rgba(0, 0, 0, 0.973);
+    background: rgb(0, 0, 0);
 }
 
 #player {
@@ -14,6 +15,11 @@
     background: whitesmoke;
     height: 30px;
     width: 30px;
+    
+}
+#player-img {
+    scale: 2;
+    transform: rotate(180deg);
 }
 
 .bullet {
@@ -29,28 +35,37 @@
     position: absolute;
         top: 0px;
         left: 0px;
-        background: rgb(207, 199, 199);
+        background: rgb(0, 0, 0);
         height: 60px;
         width: 60px;
+        border: 2px solid rgb(207, 199, 199);
+        border-radius: 5%;
 }
 
 
 #lives {
+    font-family: 'Press Start 2P';
+    position: relative;
+    top: 20px;
     display: inline;
-    padding: 50px;
-    margin: 450px;
+    padding: 100px;
+    margin: 300px;
     text-align: start;
     color: aliceblue;
 }
 
 #score {
+    position: relative;
+    top: 20px;
+    font-family: 'Press Start 2P';
     display: inline;
     text-align: end;
     color: aliceblue;
 }
 
 .game-over {
-    position:absolute;
+    font-family: 'Press Start 2P';
+    position: absolute;
     top: 300px;
     display: flex;
     justify-content: center;
