@@ -60,6 +60,8 @@ let asteroidsInterval = 5000;
 let asteroidVel = {};
 let gamerunning = true;
 let randomNumber = Math.floor(Math.random() * 4);
+let spawnAsteroidsInterval = 0;
+let inicializeAsteroidsInterval = 0;
 
 let keysPressed = {};
 let keys = {};
@@ -383,7 +385,7 @@ function collisionDetection(collisorA, collisorB, size) {
 
 function restartGame() {
     // remove all the projectiles from the screen
-    console.log(asteroids);
+
     bullets.forEach((projectile) => {
         bulletIndex = bullets.indexOf(projectile);
         projectile.elementRender.remove();
@@ -409,6 +411,7 @@ function restartGame() {
     bullets = [];
     asteroids = [];
     asteroidsInterval = 5000;
+    clearInterval(spawnAsteroidsInterval);
     initialize();
 }
 
@@ -416,7 +419,9 @@ function initialize() {
     playerElement.style.top = `${player.position.y}px`;
     playerElement.style.left = `${player.position.x}px`;
 
-    setInterval(() => {
+    clearInterval(inicializeAsteroidsInterval);
+
+    inicializeAsteroidsInterval = setInterval(() => {
         bullets.forEach((projectile) => {
             // removes the bullet that are out of the screen
             if (
@@ -481,7 +486,7 @@ function initialize() {
         });
     }, 10);
 
-    setInterval(() => {
+    spawnAsteroidsInterval = setInterval(() => {
         spawnAsteroid();
     }, asteroidsInterval);
 }
