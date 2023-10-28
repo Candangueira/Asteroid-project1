@@ -455,6 +455,11 @@ function initialize() {
                     bullets.splice(bulletIndex, 1);
                     asteroid.asteroidElement.remove();
                     asteroids.splice(asteroidIndex, 1);
+
+                    // delete the remaining explosion divs -----------
+                    setInterval(() => {
+                        explosion.remove();
+                    }, 300);
                 }
             }, 10);
         });
@@ -495,7 +500,6 @@ function initialize() {
             }
         });
     }, 10);
-
     spawnAsteroidsInterval = setInterval(() => {
         spawnAsteroid();
     }, asteroidsInterval);

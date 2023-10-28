@@ -42,6 +42,7 @@
 }
 
 .asteroid {
+    pointer-events: none;
     position: absolute;
         top: 0px;
         left: 0px;
@@ -73,7 +74,6 @@
     color: aliceblue;
 }
 #restart-button {
-    pointer-events: none;
     position: relative;
     height: 80px;
     width: 80px;
@@ -81,7 +81,8 @@
     left: 20px;
 }
 #restart-button-img {
-    pointer-events: none;
+    -drag: none;
+    user-select: none;
     position: relative;
     left: -80px;
     top: -75px;
