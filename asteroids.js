@@ -434,8 +434,18 @@ function initialize() {
                 projectile.elementRender.remove();
                 bullets.splice(bulletIndex, 1);
             }
+            // detects collision bullet / asteroid
             asteroids.forEach((asteroid) => {
                 if (collisionDetection(projectile, asteroid, 50)) {
+                    // explosion animation --------------------------
+                    let explosion = document.createElement('div');
+                    explosion.classList.add('explosion');
+                    screen.appendChild(explosion);
+                    explosion.style.top = asteroid.position.y - 45 + 'px';
+                    explosion.style.left = asteroid.position.x - 45 + 'px';
+
+                    // ----------------------------------------------
+
                     player.score += 1;
                     scoreElement.textContent = `score: ${player.score}`;
                     bulletIndex = bullets.indexOf(projectile);

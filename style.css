@@ -88,6 +88,7 @@
     scale: 0.37;
 }
 .game-over {
+    pointer-events: none;
     font-family: 'Press Start 2P';
     position: absolute;
     top: 300px;
@@ -99,4 +100,27 @@
     text-align: center;
     color: rgba(0, 0, 0, 0.973);
     background-color: rgb(224, 36, 52);
+}
+
+.explosion {
+    pointer-events: none;
+    border-radius: 50%;
+    width:150px;
+    height: 150px;
+    background-color: rgb(252, 251, 251);
+    position: absolute;
+    opacity: 0;
+
+    animation: scaleIn 0.25s cubic-bezier(.79, .50, .89, .75); 
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(.2, .2);
+        opacity: .9;
+    }
+    to {
+        transform: scale(1.2, 1.2);
+        opacity: 0; 
+    }
 }
