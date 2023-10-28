@@ -16,8 +16,16 @@ How to use my Asteroids.
 
 # Add in-app screenshots.
 
+## wireframe:
+
 ![image](./wireframe-1.png)
-✏️ Planning & Problem Solving
+
+## gameplay screenshots
+
+![image](./gameplay.png)
+![image](./gameover.png)
+
+# ✏️ Planning & Problem Solving
 
 ## Planning
 
@@ -45,8 +53,6 @@ How to use my Asteroids.
 -   FUNCTION RESTART GAME
 -   FUNCTION GAMEOVER
 
-I started the project
-
 # 🚀 Cool tech
 
 Javascript, HTML and CSS.
@@ -57,16 +63,16 @@ Javascript, HTML and CSS.
 -   If you dont move the cursor it doesnt aims.
 -   The collisions in the Asteroids are a bit off.
 
-## Buttons to not click too many times (cause its broken 😒)
-
--   Restart Button spawns too many Asteroids.
-
 # 😭 Lessons learnt
 
 -   I would focus on the essencial parts first, and leave the details and optimization for later.
+-   Nothing is as easy as it looks.
+-   Sometimes taking a break can lead to breakthroughs in your project.
 
 # ✅ Future features
 
 -   Add inercia.
 -   Splitting asteroids when hit by a projectile.
 -   Smoother movement.
+-   Main menu screen.
+-   Adding difficulty.
