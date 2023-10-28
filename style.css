@@ -27,9 +27,18 @@
     position: absolute;
     top: 0px;
     left: 0px;
-    background: rgb(221, 55, 55);
+    background: rgb(247, 175, 175);
     height: 8px;
     width: 8px;
+    box-shadow:
+            0 0 7px rgb(255, 12, 32),
+            0 0 10px rgb(255, 19, 90),
+            0 0 21px rgb(255, 19, 90),
+            0 0 42px rgb(255, 19, 90),
+            0 0 82px rgb(255, 49, 111),
+            0 0 92px rgb(255, 238, 243),
+            0 0 102px rgb(255, 225, 225),
+            0 0 151px rgb(255, 252, 252);
 }
 
 .asteroid {
@@ -64,6 +73,7 @@
     color: aliceblue;
 }
 #restart-button {
+    pointer-events: none;
     position: relative;
     height: 80px;
     width: 80px;
@@ -71,6 +81,7 @@
     left: 20px;
 }
 #restart-button-img {
+    pointer-events: none;
     position: relative;
     left: -80px;
     top: -75px;
