@@ -186,7 +186,7 @@ document.addEventListener('mousemove', function (event) {
         event.clientX - player.position.x, // gets the coordinate x of the cursor and substracts from the x coordinate of the element.
         event.clientY - player.position.y // gets the coordinate y of the cursor and substracts from the y coordinate of the element.
     );
-    rotation = angle * (180 / Math.PI) * -1; // converts que value in radians from 'angle' to degrees and multiplies per -1 to invert the rotation orientation.
+    rotation = angle * (180 / Math.PI) * -1; // converts que value in degrees from 'angle' to radians and multiplies per -1 to invert the rotation orientation.
     playerElement.style.transform = 'rotate(' + rotation + 'deg)'; // applies the rotation in the element.
 });
 
