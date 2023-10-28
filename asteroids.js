@@ -459,7 +459,7 @@ function initialize() {
                     // delete the remaining explosion divs -----------
                     setInterval(() => {
                         explosion.remove();
-                    }, 300);
+                    }, 250);
                 }
             }, 10);
         });
